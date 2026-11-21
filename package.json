@@ -2,7 +2,7 @@
   "name": "turbotranslate",
   "description": "Hover over any Spanish or Portuguese word to see what it means in that sentence. Chrome and Firefox extension with an offline dictionary.",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",
