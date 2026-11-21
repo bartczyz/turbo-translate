@@ -1,0 +1,41 @@
+{
+  "name": "turbotranslate",
+  "description": "Hover over any Spanish or Portuguese word to see what it means in that sentence. Offline dictionary, on-device translation.",
+  "private": true,
+  "version": "0.1.0",
+  "license": "MIT",
+  "keywords": [
+    "chrome-extension",
+    "language-learning",
+    "spanish",
+    "portuguese",
+    "dictionary",
+    "translation",
+    "wiktionary"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "zip": "wxt zip",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "build:dict": "node scripts/build-dictionary.mjs",
+    "build:icons": "node scripts/build-icons.mjs",
+    "postinstall": "wxt prepare"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "1.5.0",
+    "@floating-ui/dom": "1.7.4",
+    "idb": "8.0.4"
+  },
+  "devDependencies": {
+    "@fontsource-variable/fraunces": "5.3.0",
+    "@wxt-dev/module-svelte": "2.0.5",
+    "svelte": "5.57.3",
+    "svelte-check": "4.3.3",
+    "typescript": "5.9.3",
+    "wxt": "0.21.5"
+  }
+}
