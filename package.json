@@ -1,6 +1,6 @@
 {
   "name": "turbotranslate",
-  "description": "Hover over any Spanish or Portuguese word to see what it means in that sentence. Offline dictionary, on-device translation.",
+  "description": "Hover over any Spanish or Portuguese word to see what it means in that sentence. Chrome and Firefox extension with an offline dictionary.",
   "private": true,
   "version": "0.1.0",
   "license": "MIT",
@@ -12,6 +12,7 @@
   "bugs": "https://github.com/bartczyz/turbo-translate/issues",
   "keywords": [
     "chrome-extension",
+    "firefox-addon",
     "language-learning",
     "spanish",
     "portuguese",
@@ -26,6 +27,7 @@
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox",
     "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "build:dict": "node scripts/build-dictionary.mjs",
     "build:icons": "node scripts/build-icons.mjs",

@@ -8,6 +8,12 @@ on:
 permissions:
   contents: write
 
+env:
+  # Optional: AMO API credentials (addons.mozilla.org → Tools → Manage API Keys), saved as repository secrets.
+  # With them, the Firefox build is signed (unlisted) so it installs permanently in any Firefox.
+  AMO_API_KEY: ${{ secrets.AMO_API_KEY }}
+  AMO_API_SECRET: ${{ secrets.AMO_API_SECRET }}
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -42,12 +48,28 @@ jobs:
 
       - run: pnpm check
       - run: pnpm zip
+      # Also writes a sources zip, which addons.mozilla.org asks for when signing bundled code.
+      - run: pnpm zip:firefox
+
+      - name: Sign the Firefox build
+        if: env.AMO_API_KEY != ''
+        run: |
+          pnpm dlx web-ext@8 sign \
+            --channel unlisted \
+            --source-dir .output/firefox-mv3 \
+            --upload-source-code .output/*-sources.zip \
+            --artifacts-dir .output/signed \
+            --api-key "$AMO_API_KEY" \
+            --api-secret "$AMO_API_SECRET" \
+            --approval-timeout 1800000
+          for f in .output/signed/*.xpi; do mv "$f" ".output/turbotranslate-${GITHUB_REF_NAME#v}-firefox.xpi"; done
 
       - name: Publish the release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" .output/*-chrome.zip \
+          shopt -s nullglob
+          gh release create "$GITHUB_REF_NAME" .output/*-chrome.zip .output/*-firefox.zip .output/*-firefox.xpi \
             --title "TurboTranslate $GITHUB_REF_NAME" \
             --generate-notes \
             --verify-tag

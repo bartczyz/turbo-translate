@@ -165,7 +165,10 @@
       {#if !ui.wordMT && !ui.aiEnabled && ui.mtStatus === 'downloadable'}
         <p class="tt-hint">Turn on offline translation from the toolbar icon to translate whole phrases.</p>
       {:else if !ui.wordMT && !ui.aiEnabled && !ui.breakdown?.length}
-        <p class="tt-empty">Can’t translate this phrase here. Add an AI key in Settings, or use Chrome’s offline translation.</p>
+        <p class="tt-empty">
+          Can’t translate this phrase here.
+          {ui.mtStatus === 'unsupported' ? 'Add an AI key in Settings to translate phrases.' : 'Add an AI key in Settings, or turn on offline translation from the toolbar icon.'}
+        </p>
       {/if}
     {:else if ui.wordMT}
       <div class="tt-mt">
