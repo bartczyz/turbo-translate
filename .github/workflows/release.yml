@@ -1,0 +1,53 @@
+name: Release
+
+# Runs when a version tag is pushed (`pnpm release patch` creates and pushes one).
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Check the tag matches package.json
+        run: |
+          version="v$(node -p "require('./package.json').version")"
+          if [ "$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME doesn't match package.json version $version"
+            exit 1
+          fi
+
+      # Building the dictionaries downloads ~1.6 GB from kaikki.org, so reuse them
+      # until the build script changes.
+      - name: Restore dictionaries
+        id: dict
+        uses: actions/cache@v4
+        with:
+          path: public/dict
+          key: dict-${{ hashFiles('scripts/build-dictionary.mjs') }}
+      - name: Build dictionaries
+        if: steps.dict.outputs.cache-hit != 'true'
+        run: pnpm build:dict
+
+      - run: pnpm check
+      - run: pnpm zip
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" .output/*-chrome.zip \
+            --title "TurboTranslate $GITHUB_REF_NAME" \
+            --generate-notes \
+            --verify-tag

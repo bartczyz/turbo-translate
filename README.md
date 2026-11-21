@@ -1,5 +1,8 @@
 # TurboTranslate
 
+[![CI](https://github.com/bartczyz/turbo-translate/actions/workflows/ci.yml/badge.svg)](https://github.com/bartczyz/turbo-translate/actions/workflows/ci.yml)
+[![Latest release](https://img.shields.io/github/v/release/bartczyz/turbo-translate)](https://github.com/bartczyz/turbo-translate/releases/latest)
+
 **Hover over a Spanish or Portuguese word to see what it means in that sentence.**
 
 TurboTranslate is a Chrome extension for language learners who read real websites: news, Wikipedia, recipes, forums.
@@ -53,7 +56,16 @@ TurboTranslate has no server, no account and no analytics.
 
 ## Install
 
-TurboTranslate isn't in the Chrome Web Store yet. To install it, build it from source:
+TurboTranslate isn't in the Chrome Web Store yet. Install it from a release:
+
+1. Download `turbotranslate-<version>-chrome.zip` from the [latest release](https://github.com/bartczyz/turbo-translate/releases/latest) and unzip it.
+2. Open `chrome://extensions` and turn on **Developer mode** (top right).
+3. Click **Load unpacked** and pick the unzipped folder. Keep the folder: Chrome loads the extension from it.
+
+To update, unzip the new release over the same folder and click the reload icon on TurboTranslate's card in `chrome://extensions`.
+Your saved words and settings are kept.
+
+### Build from source
 
 ```bash
 git clone https://github.com/bartczyz/turbo-translate.git && cd turbo-translate
@@ -64,12 +76,7 @@ pnpm build        # outputs .output/chrome-mv3
 
 `build:dict` streams the Wiktionary data from [kaikki.org](https://kaikki.org): about 1 GB for Spanish and 600 MB for Portuguese.
 It keeps only the compact dictionaries it builds (about 65 MB in `public/dict`).
-
-Then load it in Chrome:
-
-1. Open `chrome://extensions`.
-2. Turn on **Developer mode** (top right).
-3. Click **Load unpacked** and pick the `.output/chrome-mv3` folder.
+Load `.output/chrome-mv3` with **Load unpacked**, as above.
 
 After installing:
 
@@ -91,7 +98,7 @@ After installing:
 
 ## Development
 
-You need Node 20+ and [pnpm](https://pnpm.io). The extension is built with [WXT](https://wxt.dev), [Svelte 5](https://svelte.dev) and TypeScript.
+You need Node 22+ and [pnpm](https://pnpm.io). The extension is built with [WXT](https://wxt.dev), [Svelte 5](https://svelte.dev) and TypeScript.
 
 | Command | What it does |
 |---|---|
@@ -101,6 +108,18 @@ You need Node 20+ and [pnpm](https://pnpm.io). The extension is built with [WXT]
 | `pnpm check` | Type-check everything (svelte-check) |
 | `pnpm build:dict [es] [pt] [--file path]` | Rebuild the dictionaries, all or the ones named. `--file` uses a local kaikki JSONL instead of downloading |
 | `pnpm build:icons` | Re-render the toolbar icons |
+
+### Releasing
+
+```bash
+pnpm release patch   # or minor / major
+```
+
+This bumps the version in `package.json` (the extension's version comes from it), commits "Release vX.Y.Z", tags it and pushes.
+The tag starts the [Release workflow](.github/workflows/release.yml).
+It builds the dictionaries, type-checks, zips the extension and publishes a GitHub release with the zip and generated notes.
+The dictionaries are cached between releases until `scripts/build-dictionary.mjs` changes.
+Every push and pull request also runs [CI](.github/workflows/ci.yml), which type-checks and builds.
 
 ### How it works
 
