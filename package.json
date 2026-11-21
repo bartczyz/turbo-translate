@@ -4,6 +4,12 @@
   "private": true,
   "version": "0.1.0",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bartczyz/turbo-translate.git"
+  },
+  "homepage": "https://github.com/bartczyz/turbo-translate",
+  "bugs": "https://github.com/bartczyz/turbo-translate/issues",
   "keywords": [
     "chrome-extension",
     "language-learning",

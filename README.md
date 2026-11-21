@@ -56,7 +56,7 @@ TurboTranslate has no server, no account and no analytics.
 TurboTranslate isn't in the Chrome Web Store yet. To install it, build it from source:
 
 ```bash
-git clone <this repo> turbotranslate && cd turbotranslate
+git clone https://github.com/bartczyz/turbo-translate.git && cd turbo-translate
 pnpm install
 pnpm build:dict   # downloads and builds the offline dictionaries, takes 1–2 minutes
 pnpm build        # outputs .output/chrome-mv3
